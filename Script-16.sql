@@ -617,3 +617,183 @@ select * from pedido p where p.id_vendedor in(3,6);
 
 --15. Os clientes que não informaram o logradouro.
 select * from cliente c where c.logradouro is null;
+
+--16. Os clientes que moram em avenidas.
+select * from bairro b ;
+select * from cliente c where id_bairro = 2;
+
+--17. Os vendedores que o nome começa com a letra S.
+select * from vendedor v where upper(v.nome) like 'A%';
+select * from vendedor v ;
+
+--18. Os vendedores que o nome termina com a letra A.
+select * from vendedor v where upper(v.nome) like '%A'; 
+
+--19. Os vendedores que o nome não começa com a letra A.
+select * from vendedor v where upper(v.nome) not like '%A';
+
+--20. Os municípios que começam com a letra P e são de Santa Catarina.
+select * from uf u ;
+select * from municipio m where m.nome like 'P%' and m.id_uf != 1;
+
+--21. As transportadoras que informaram o endereço.
+select * from transportadora t where t.logradouro is not null;
+
+--22. Os itens do pedido 01.
+select * from pedido_produto pp where id_pedido = 1;
+
+--23. Os itens do pedido 6 ou do pedido 10
+select id_produto from pedido_produto pp where id_pedido in(6, 10); 
+
+----------------------------------------------------------------------
+--FUNÇÕES AGREGADAS
+
+--estração da media dos pedidos
+select avg(valor) from pedido p; 
+
+--retorna a quantidade de itens contanto que o campo seja NOT NULL
+select count(id) from municipio m; 
+
+--caso use * no lugar do id ele conta mesmo se o campo estiver nulo
+
+--selecionar o valor maximo e minimo dos pedidos
+select max(valor), min(valor) from pedido p; 
+
+--somatorio de todos os pedidos
+select sum(valor) from pedido p 
+
+--agrupar clientes pela soma de seus pedidos
+select id_cliente , sum(valor) from pedido p group by id_cliente ;
+
+--pra trabalhar com condições junto com funções agregadas se utiliza o having
+select id_cliente , sum(valor) from pedido p group by id_cliente having sum(valor) > 1000 ;
+
+-------------------------------------------------------------------------------------------
+--EXERCICIO - FUNÇÕES AGREGADAS
+--1. A média dos valores de vendas dos vendedores que venderam mais que R$ 200,00.
+select id_vendedor, avg(valor)  as media_vendedor from pedido p group by p.id_vendedor having avg(valor) > 200;
+
+--2. Os vendedores que venderam mais que R$ 1500,00.
+select id_vendedor from pedido p group by id_vendedor having sum(valor) > 500; 
+
+--3. O somatório das vendas de cada vendedor.
+select id_vendedor, sum(valor) from pedido p group by id_vendedor; 
+
+--4. A quantidade de municípios.
+select count(id) as municipios from municipio m ;
+
+--5. A quantidade de municípios que são do Paraná ou de Santa Catarina.
+select * from uf u ;
+select count(id) from municipio m where m.id_uf not in(1, 2);
+
+--6. A quantidade de municípios por estado.
+select count(id) from municipio m group by m.id_uf ;
+
+--7. A quantidade de clientes que informaram o logradouro.
+select count(id) from cliente c ;
+select count(id) from cliente c where c.logradouro is not null;
+
+--8. A quantidade de clientes por município.
+select count(id) from cliente c group by id_municipio ;
+
+--9. A quantidade de fornecedores.
+select count(id) from fornecedor f ;
+
+--10. A quantidade de produtos por fornecedor.
+select id_fornecedor , count(id) from produto p group by p.id_fornecedor order by count(id) asc; 
+
+--11. A média de preços dos produtos do fornecedor Cap. Computadores.
+select * from fornecedor f;
+select id_fornecedor, avg(valor) from produto p group by p. id_fornecedor having p.id_fornecedor = 1;
+
+--12. O somatório dos preços de todos os produtos.
+select sum(valor) from produto p ;
+
+--13. O nome do produto e o preço somente do produto mais caro.
+select nome, valor from produto p order by valor desc limit 1; 
+
+-------------------------------------------------------------------------------------------------
+--RELACIONAMENTO COM JOINS
+
+--relacionamento entre as tabelas
+
+--left outer joinfaz o relacionamento com base na tabela da esquerda(cliente)
+select 
+	c.nome as cliente, p.nome as profissao 
+from 
+	cliente c 
+left outer join
+	profissao p on c.id_profissao = p.id;
+
+--utilizando o inner join, o relacionamento entre as duas tabelas são obrigatorias
+select 
+	c.nome as cliente, p.nome as profissao 
+from 
+	cliente c 
+inner join
+	profissao p on c.id_profissao = p.id;
+
+--right outer join é a mesma coisa do left outer join, mas utilizando como tabela base a da direita
+
+select 
+	c.nome as cliente, p.nome as profissao 
+from 
+	cliente c 
+right outer join
+	profissao p on c.id_profissao = p.id;
+
+--EXERCICIO COM JOIN
+
+--1. O nome do cliente, a profissão, a nacionalidade, o logradouro, o número, o complemento, o bairro, o município e a unidade de federação.
+select 
+	c.nome as cliente, p.nome as profissao, b.nome as bairro, c.logradouro as logradouro, c.numero as numero, comp.nome as complemento
+from 
+	cliente c 
+left outer join
+	profissao p on c.id_profissao = p.id
+left outer join 
+	nacionalidade n on c.id_nacionalidade = n.id 
+left outer join 
+	complemento comp on c.id_complemento = comp.id
+left outer join 
+	bairro b on c.id_bairro = b.id;
+
+--2. O nome do produto, o valor e o nome do fornecedor.
+select 
+	p.nome as produto, p.valor as valor, f.nome as fornecedor
+from 
+	produto p 
+left outer join 
+	fornecedor f on p.id_fornecedor = f.id;
+
+--3. O nome da transportadora e o município.
+select 
+	t.nome as transportadora, m.nome as municipio
+from 
+	transportadora t
+left outer join 
+	municipio m on t.id_municipio = m.id ;
+
+--4. A data do pedido, o valor, o nome do cliente, o nome da transportadora e o nome do vendedor.
+select 
+	p.data_pedido as data_pedido, p.valor as valor, c.nome as cliente, t.nome as transportadora, v.nome as vendedor
+from
+	pedido p
+left outer join
+	cliente c on p.id_cliente = c.id 
+left outer join
+	transportadora t on p.id_transportadora = t.id 
+left outer join 
+	vendedor v on p.id_vendedor = v.id ;
+	
+--5. O nome do produto, a quantidade e o valor unitário dos produtos do pedido.
+select 
+	p.nome, pp.quantidade, pp.valor_unitario
+from 
+	pedido_produto pp
+left outer join
+	produto p on pp.id_pedido = p.id ;
+
+
+
+
