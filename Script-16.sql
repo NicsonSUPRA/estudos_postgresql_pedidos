@@ -794,6 +794,89 @@ from
 left outer join
 	produto p on pp.id_pedido = p.id ;
 
+--6. O nome dos clientes e a data do pedido dos clientes que fizeram algum pedido (ordenado pelo nome do cliente).
+select * from pedido;
+select 
+	c.nome, p.data_pedido
+from 
+	pedido p
+left outer join
+	cliente c on p.id_cliente = c.id;
 
+--7. O nome dos clientes e a data do pedido de todos os clientes, independente se tenham feito pedido (ordenado pelo nome do cliente).
+select 
+	c.nome, p.data_pedido
+from 
+	pedido p
+full join
+	cliente c on p.id_cliente = c.id
+order by c.nome asc;
 
+--8. O nome da cidade e a quantidade de clientes que moram naquela cidade.
+select * from municipio;
+select * from cliente;
+select 
+	m.nome, count(c.id)
+from 
+	cliente c
+inner join
+	 municipio m on m.id = c.id_municipio
+group by m.nome;
 
+--9. O nome do fornecedor e a quantidade de produtos de cada fornecedor com mais de 2 produtos.
+select 
+	f.nome, count(p.id)
+from 
+	fornecedor f
+inner join
+	 produto p on p.id_fornecedor = f.id
+group by 
+	f.nome
+having
+	count(p.id) > 2;
+
+--10.O nome do cliente e o somatório do valor do pedido (agrupado por cliente).
+select * from pedido p;
+select 
+	c.nome, sum(p.valor) as valor_total
+from 
+	cliente c
+inner join
+	 pedido p on p.id_cliente = c.id
+group by 
+	c.nome
+;
+
+--11.O nome do vendedor e o somatório do valor do pedido (agrupado por vendedor).
+select * from pedido p;
+select 
+	v.nome, sum(p.valor) as valor_total
+from 
+	vendedor v
+inner join
+	 pedido p on p.id_vendedor = v.id
+group by 
+	v.nome
+;
+
+--12.O nome da transportadora e o somatório do valor do pedido (agrupado por transportadora).
+select 
+	t.nome, sum(p.valor) as valor_total
+from 
+	transportadora t
+inner join
+	 pedido p on p.id_transportadora = t.id
+group by 
+	t.nome
+;
+
+--13.O nome do cliente e a quantidade de pedidos de cada um (agrupado por cliente).
+select 
+	c.nome, count(p.id)
+from 
+	cliente c
+inner join
+	 pedido p on p.id_cliente = c.id
+group by 
+	c.nome
+;
