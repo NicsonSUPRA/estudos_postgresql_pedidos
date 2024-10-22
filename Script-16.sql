@@ -880,3 +880,72 @@ inner join
 group by 
 	c.nome
 ;
+
+--14.O nome do produto e a quantidade vendida (agrupado por produto).
+select * from pedido_produto;
+select 
+	p.nome, sum(pp.quantidade) as quantidade_vendida
+from 
+	produto p
+inner join
+	 pedido_produto pp on pp.id_produto = p.id
+group by 
+	p.nome
+;
+
+--15.A data do pedido e o somatório do valor dos produtos do pedido (agrupado pela data do pedido).
+select * from pedido;
+select * from pedido_produto;
+select 
+	p.data_pedido, sum(pp.valor_unitario)
+from
+	pedido p
+left outer join
+	pedido_produto pp on pp.id_pedido = p.id
+group by
+	p.data_pedido;
+
+--16.A data do pedido e a quantidade de produtos do pedido (agrupado pela data do pedido).
+select * from pedido;
+select * from pedido_produto;
+select 
+	p.data_pedido, count(pp.quantidade)
+from
+	pedido p
+left outer join
+	pedido_produto pp on pp.id_pedido = p.id
+group by
+	p.data_pedido;
+
+-------------------------------------------------------------------------------------------------------
+--Comandos adicionais uteis
+
+--Extraindo partes expecificas do campo data
+select 
+	data_pedido, 
+	extract(day from data_pedido) as dia,
+	extract(month from data_pedido) as mes,
+	extract(year from data_pedido) as ano
+from 
+	pedido;
+--comando util para fazer filtragens
+
+--retornando nome em Strings menores
+select nome, SUBSTRING(nome from 1 for 5) from cliente;
+
+--string substituta caso o campo seja null
+select nome, cpf, COALESCE(cpf, 'Não Informado') from cliente;
+
+--utilisando o case em sql
+select * from uf;
+select 
+	case nome
+		when 'SP' then 'São Paulo'
+		when 'SC' then 'Santa Catarina'
+		when 'PR' then 'Paraná'
+		when 'MG' then 'Minas Gerais'
+		when 'RS' then 'Rio Grande do Sul'
+		when 'RJ' then 'Rio de Janeiro'
+	else 'outro'
+	end
+from uf;
