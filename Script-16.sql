@@ -978,3 +978,39 @@ select
 	else 'sem data'
 	end
 from cliente;
+
+--3. O nome do cliente e somente o ano de nascimento. Caso a data de nascimento não esteja preenchida mostrar a mensagem “Não informado”.
+select 
+	nome, 
+	COALESCE(EXTRACT(year from data_nascimento)::text, 'não informado')
+from cliente;
+
+--4. O caractere 5 até o caractere 10 de todos os municípios.
+select SUBSTRING(nome from 5 for 10) from municipio;
+
+--5. O nome de todos os municípios em letras maiúsculas.
+select upper(nome) from municipio;
+
+--6. O nome do cliente e o gênero. Caso seja M mostrar “Masculino”, senão mostrar “Feminino”.
+select 
+	nome,
+	case genero
+		when 'M' then 'Masculino'
+		when 'F' then 'Feminino'
+	else
+		'Não Informado'
+	end
+from cliente;
+
+--7. O nome do produto e o valor. Caso o valor seja maior do que R$ 500,00 mostrar a mensagem “Acima de 500”, caso contrário, mostrar a mensagem “Abaixo de 500”.
+select * from produto;
+select 
+	nome,
+	case
+		when valor > 500 then 'Acima de 500'
+		when valor < 500 then 'Menos que 500'
+		else
+			'Igual a 500'
+		end
+	as valor_500
+from produto;
