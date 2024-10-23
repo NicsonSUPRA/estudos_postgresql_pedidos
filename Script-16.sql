@@ -1014,3 +1014,33 @@ select
 		end
 	as valor_500
 from produto;
+
+------------------------------------------------------------------------------------------------
+--subconsultas
+
+--utilizando consultas como parametros de outras consultas
+--Exemplo
+--selecione a data do pedido e o valor dos produtos que o valor seja maior que a media geral
+select * from pedido;
+select 
+	data_pedido,
+	valor
+from 
+	pedido
+where
+	valor > (select avg(valor) from pedido);
+
+--retornar a quantidade de produtos do pedido
+--em resumo ele esta pegando a quantidade de pedidos de cada produto onde o id_pedido = pedido.id
+select * from pedido_produto;
+select 
+	data_pedido,
+	valor,
+	(select sum(quantidade) from pedido_produto pp where pp.id_pedido = p.id) as total_pedidos
+from 
+	pedido p;
+
+--utilizando subconsultas com o comando update
+select * from pedido;
+update pedido set valor = valor * 1.05 
+	where valor > (select avg(valor) from pedido);
