@@ -1044,3 +1044,48 @@ from
 select * from pedido;
 update pedido set valor = valor * 1.05 
 	where valor > (select avg(valor) from pedido);
+--EXERCICIO
+
+--1. O nome dos clientes que moram na mesma cidade do Tadeo. Não deve ser mostrado o Tadeo.
+select * from cliente;
+select 
+	nome
+from 
+	cliente c
+where c.id_municipio = (select id_municipio from cliente c where c.id = 2 ) and
+	id != 2;
+
+--2. A data e o valor dos pedidos que o valor do pedido seja menor que a média de todos os pedidos.
+select * from pedido;
+select 
+	data_pedido,
+	valor
+from 
+	pedido
+where
+	valor < (select avg(valor) from pedido);
+--3. A data,o valor, o cliente e o vendedor dos pedidos que possuem 2 ou mais produtos.
+select * from 
+select 
+	p.data_pedido,
+	p.valor,
+	c.nome,
+	v.nome
+from
+	pedido p
+left outer join
+	cliente c on c.id = p.id_cliente
+left outer join
+	vendedor v on v.id = p.id_vendedor
+where
+	(select sum(quantidade) from pedido_produto pp where p.id = pp.id_pedido) < 2;
+
+--4. O nome dos clientes que moram na mesma cidade da transportadora BSTransportes.
+select * from transportadora;
+select
+	c.id,
+	c.nome
+from 
+	cliente c
+where
+	c.id_municipio = (select t.id_municipio from transportadora t where t.id = 1);
