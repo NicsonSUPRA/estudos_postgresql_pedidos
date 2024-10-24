@@ -1113,3 +1113,61 @@ set
 	valor = valor * 1.05
 where
 	valor > (select avg(pp.valor_unitario) from pedido_produto pp where p.id = pp.id_pedido);
+
+--Views
+
+-- criar uma view
+create view cliente_profissao as
+select
+	c.nome as cliente,
+	c.cpf as cpf,
+	p.nome as profissao
+from
+	cliente c
+left outer join
+	profissao p on c.id_profissao = p.id;
+
+--caso queira DELETAR VIEW rodar comando;
+drop view cliente_profissao;
+
+select * from cliente_profissao where profissao = 'Professor';
+
+--EXERCICIOS
+--1. O nome, a profissão, a nacionalidade, o complemento, o município, a unidade de federação, o bairro, 
+--o CPF,o RG, a data de nascimento, o gênero (mostrar “Masculino” ou “Feminino”), o logradouro, o número e as observações dos clientes.
+select * from complemento;
+create view cliente_view as
+select 
+	c.nome as nome,
+	p.nome as profissao,
+	n.nome as nacionalidade,
+	cmp.nome as complemento,
+	m.nome as municipio,
+	u.nome as unid_federal,
+	b.nome as bairro,
+	c.cpf as cpf,
+	c.rg as rg,
+	c.data_nascimento as nascimento_cliente,
+	case c.genero
+		when 'M' then 'Masculino'
+		when 'F' then 'Feminino'
+	else
+		'não informado'
+	end
+from
+	cliente c
+left outer join
+	profissao p on p.id = c.id_profissao
+left outer join
+	nacionalidade n on n.id = c.id_nacionalidade
+left outer join
+	complemento cmp on cmp.id = c.id_complemento
+left outer join
+	municipio m on m.id = c.id_municipio
+left outer join 
+	uf u on u.id = m.id_uf
+left outer join
+	bairro b on b.id = c.id_bairro;
+
+select * from cliente_view;
+	
