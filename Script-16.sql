@@ -1089,3 +1089,27 @@ from
 	cliente c
 where
 	c.id_municipio = (select t.id_municipio from transportadora t where t.id = 1);
+
+--5. O nome do cliente e o município dos clientes que estão localizados no mesmo município de qualquer uma das transportadoras.
+select * from transportadora;
+select * from municipio;
+select * from cliente;
+select
+	c.nome,
+	m.nome
+from 
+	cliente c
+left outer join
+	municipio m on c.id_municipio = m.id
+where
+	c.id_municipio in (select t.id_municipio from transportadora t);
+
+--6. Atualizar o valor do pedido em 5% para os pedidos que o somatório do valor total dos produtos daquele pedido seja maior que a média do valor total
+select * from pedido;
+select * from pedido_produto;
+update 
+	pedido p
+set
+	valor = valor * 1.05
+where
+	valor > (select avg(pp.valor_unitario) from pedido_produto pp where p.id = pp.id_pedido);
