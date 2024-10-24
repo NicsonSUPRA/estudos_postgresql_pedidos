@@ -1171,3 +1171,49 @@ left outer join
 
 select * from cliente_view;
 	
+--2. O nome do município e o nome e a sigla da unidade da federação.
+select
+	m.nome,
+	u.nome
+from 
+	municipio m
+left outer join
+	uf u on u.id = m.id_uf;
+
+--3. O nome do produto, o valor e o nome do fornecedor dos produtos.
+select * from produto;
+select 
+	p.nome,
+	p.valor,
+	f.nome
+from 
+	produto p
+left outer join
+	fornecedor f on f.id = p.id_fornecedor;
+
+--4. O nome da transportadora, o logradouro, o número, o nome da unidade de federação e a sigla da unidade de federação das transportadoras.
+select 
+	t.nome,
+	t.logradouro,
+	t.numero,
+	u.nome
+from 
+	transportadora t
+left outer join
+	uf u on u.id = (select id_uf from municipio m where m.id = t.id_municipio);
+
+--5. A data do pedido, o valor, o nome da transportadora, o nome do cliente e o nome do vendedor dos pedidos.
+select * from pedido;
+select 
+	p.valor,
+	t.nome,
+	c.nome,
+	v.nome
+from
+	pedido p
+left outer join
+	transportadora t on t.id = p.id_transportadora
+left outer join
+	cliente c on c.id = p.id_cliente
+left outer join
+	vendedor v on v.id = p.id_vendedor;
