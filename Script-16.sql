@@ -1217,3 +1217,47 @@ left outer join
 	cliente c on c.id = p.id_cliente
 left outer join
 	vendedor v on v.id = p.id_vendedor;
+
+
+--------------------------------------------------------------------------------
+--Campos autoimcremento
+
+--criando o seq em uma tabela(chaves primarias sequenciais)
+
+create table exemplo (
+	id serial not null,
+	nome varchar(50) not null,
+
+	constraint pk_exemplo_id primary key (id)
+);
+
+insert into exemplo(nome)
+	values('exemplo 1');
+insert into exemplo(nome)
+	values('exemplo 2');
+insert into exemplo(nome)
+	values('exemplo 3');
+insert into exemplo(nome)
+	values('exemplo 4');
+insert into exemplo(nome)
+	values('exemplo 5');
+select * from exemplo;
+
+--implementando seq em tabela ja existente
+
+select max(id) + 1 from bairro;
+--em uma tabela já existente, é preciso colocar o menor valor como
+-- o maior valor do id + 1.
+create sequence bairro_id_seq MINVALUE 5;
+
+--agora será preciso associar a sequencia com a tabela 
+alter table bairro alter id set default nextval('bairro_id_seq')
+
+--agora será preciso associar o seq com a tabela
+alter sequence bairro_id_seq OWNED by bairro.id;
+
+--testando
+insert into bairro(nome) values('Madureira');
+insert into bairro(nome) values('Duque de Caxias');
+
+select * from bairro;
