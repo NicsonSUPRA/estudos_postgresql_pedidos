@@ -1326,6 +1326,36 @@ alter table nacionalidade alter id set default nextval('nacionalidade_id_seq');
 
 alter sequence nacionalidade_id_seq owned by nacionalidade.id;
 
+--f. Pedido
+
+select max(id) from pedido;
+
+create sequence pedido_id_seq minvalue 16 ;
+
+alter table pedido alter id set default nextval('pedido_id_seq');
+
+alter sequence pedido_id_seq owned by pedido.id;
 
 --em tabelas compostas como no caso da tabela pedido_produto, não é necessario implementar
 --pois as duas chaves são chaves primarias nsão chaves extrangeiras.
+
+--Campos default
+
+--caso o campo data_pedido não seja informado, coloque a data atual
+alter table pedido alter column data_pedido set default current_date;
+
+--caso o campo valor não seja informado, coloque o valor como 0
+alter table pedido alter column valor set default 0;
+
+select * from pedido;
+
+insert into pedido(id_cliente, id_vendedor, id_transportadora)
+	values(1, 1, 1);
+
+--Exercicio
+--1. Adicione valores default na tabela de produtos do pedido
+
+--a. Quantidade com o valor 1
+alter table pedido_produto alter column quantidade set default 1; 
+--b. Valor unitário com o valor 0
+alter table pedido_produto alter column valor_unitario set default 0;
