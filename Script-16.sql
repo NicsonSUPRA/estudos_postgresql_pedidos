@@ -1261,3 +1261,71 @@ insert into bairro(nome) values('Madureira');
 insert into bairro(nome) values('Duque de Caxias');
 
 select * from bairro;
+
+--Exercicio
+
+--1. Criar sequências para todas as outras tabelas da base de dados
+
+--a. Cliente
+select max(id) from cliente;
+
+create sequence cliente_id_seq minvalue 15;
+
+alter table cliente alter id set default nextval('cliente_id_seq');
+
+alter sequence cliente_id_seq owned by bairro.id;
+
+insert into cliente(nome, cpf, rg, genero)
+	values('Cliente Exemplo', '76543219876', '54321', 'M');
+
+
+--b. Complemento
+
+select max(id) from complemento;
+
+create sequence complemento_id_seq minvalue 3;
+
+alter table complemento alter id set default nextval('complemento_id_seq');
+
+alter sequence complemento_id_seq owned by complemento.id;
+
+select * from complemento;
+
+insert into complemento(nome)
+	values('Lote');
+
+--c. Fornecedor
+
+create sequence fornecedor_id_seq minvalue 4;
+
+alter table fornecedor alter id set default nextval('fornecedor_id_seq');
+
+alter sequence fornecedor_id_seq  owned by fornecedor.id;
+
+--d. Município
+
+select max(id) from municipio;
+
+create sequence municipio_id_seq MINVALUE 10;
+
+alter table municipio alter id set default nextval('municipio_id_seq');
+
+alter sequence municipio_id_seq owned by municipio.id;
+
+insert into municipio(nome, id_uf)
+	values('São Gonçalo', 6);
+select * from municipio;
+
+--e. Nacionalidade
+
+select max(id) from nacionalidade;
+
+create sequence nacionalidade_id_seq minvalue 5;
+
+alter table nacionalidade alter id set default nextval('nacionalidade_id_seq');
+
+alter sequence nacionalidade_id_seq owned by nacionalidade.id;
+
+
+--em tabelas compostas como no caso da tabela pedido_produto, não é necessario implementar
+--pois as duas chaves são chaves primarias nsão chaves extrangeiras.
