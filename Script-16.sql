@@ -1359,3 +1359,27 @@ insert into pedido(id_cliente, id_vendedor, id_transportadora)
 alter table pedido_produto alter column quantidade set default 1; 
 --b. Valor unitário com o valor 0
 alter table pedido_produto alter column valor_unitario set default 0;
+
+----------------------------------------------------------------------------------
+
+--index
+
+--utilizado para acelerar as pesquisas na base de dados
+
+--criar os index para colunas que são feitos muitos selects
+
+--criando index
+create index idx_cliente_nome on cliente (nome);
+
+--uma dica é fazer o index para data, principalmente para as que constantemente
+--são feitas consultas utilizando between;
+
+--Exercicios
+
+--1. Adicione índices nas seguintes tabelas e campos
+
+--a. Pedido – data do pedido
+create index idx_pedido_data on pedido (data_pedido);
+
+--b. Produto – nome
+create index idx_produto_nome on produto (nome);
