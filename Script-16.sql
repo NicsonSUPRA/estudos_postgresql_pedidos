@@ -1383,3 +1383,109 @@ create index idx_pedido_data on pedido (data_pedido);
 
 --b. Produto – nome
 create index idx_produto_nome on produto (nome);
+
+-------------------------------------------------------------------------
+--Avaliação
+create table editora(
+	id serial not null,
+	nome varchar(50) not null,
+
+	constraint pk_editora_id primary key (id),
+	constraint un_editora_nome unique (nome)
+);
+
+insert into editora(nome)
+	values('Bookman');
+insert into editora(nome)
+	values('Edgard Blusher');
+insert into editora(nome)
+	values('Nova Terra');
+insert into editora(nome)
+	values('BrasPort');
+
+create table categoria(
+	id serial not null,
+	nome varchar(50) not null,
+
+	constraint pk_categoria_id primary key (id),
+	constraint un_categoria_nome unique (nome)
+);
+
+insert into categoria(nome)
+	values('Banco de Dados');
+insert into categoria(nome)
+	values('HTML');
+insert into categoria(nome)
+	values('Java');
+insert into categoria(nome)
+	values('PHP');
+
+create table autor(
+	id serial not null,
+	nome varchar(50) not null,
+
+	constraint pk_autor_id primary key (id),
+	constraint un_autor_nome unique (nome)
+);
+
+insert into autor(nome)
+	values('Waldemar Seizer');
+insert into autor(nome)
+	values('Flavio Soares');
+insert into autor(nome)
+	values('John Watson');
+insert into autor(nome)
+	values('Rui Rossi dos Santos');
+insert into autor(nome)
+	values('Antonio Pereira de Rezende');
+insert into autor(nome)
+	values('Claudiney Calixto Lima');
+insert into autor(nome)
+	values('Ian Graham');
+insert into autor(nome)
+	values('Fabricio Xavier');
+insert into autor(nome)
+	values('Fabio Dalloglio');
+
+create table livro(
+	id serial not null,
+	id_editora integer not null,
+	id_categoria integer not null,
+	nome varchar(50) not null,
+
+	constraint pk_livro_id primary key (id),
+	constraint fk_livro_ideditora foreign key (id_editora) references editora (id),
+	constraint fk_livro_idcaterogia foreign key (id_categoria) references categoria (id),
+	constraint un_livro_nome unique (nome)
+);
+
+select * from editora;
+select * from categoria;
+
+insert into livro(id_editora, id_categoria, nome)
+	values(2, 1, 'Banco de Dados - Edição 1');
+insert into livro(id_editora, id_categoria, nome)
+	values(1, 1, 'Oracle DataBase 11G Administração');
+insert into livro(id_editora, id_categoria, nome)
+	values(3, 3, 'Programação de Computadores em Java');
+insert into livro(id_editora, id_categoria, nome)
+	values(4, 3, 'Programação Orientada a Aspectos em Java');
+insert into livro(id_editora, id_categoria, nome)
+	values(4, 2, 'HTML5-Guia Prático');
+insert into livro(id_editora, id_categoria, nome)
+	values(3, 2, 'HTML5-Guia Referência para desenvolvimento Web');
+insert into livro(id_editora, id_categoria, nome)
+	values(4, 4, 'PHP para Desenvolvimento Profissional');
+insert into livro(id_editora, id_categoria, nome)
+	values(2, 4, 'PHP para Programação Orientada a Objeto');
+
+select * from livro;
+
+create table livro_autor(
+	id_livro integer not null,
+	id_autor integer not null,
+
+	constraint pk_livro_autor_id primary key (id_livro, id_autor),
+	constraint fk_livro_autor_idlivro foreign key (id_livro) references livro (id),
+	constraint fk_livro_autor_idautor foreign key (id_autor) references autor (id)
+);
