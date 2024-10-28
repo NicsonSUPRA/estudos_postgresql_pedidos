@@ -1489,3 +1489,121 @@ create table livro_autor(
 	constraint fk_livro_autor_idlivro foreign key (id_livro) references livro (id),
 	constraint fk_livro_autor_idautor foreign key (id_autor) references autor (id)
 );
+
+select * from livro;
+select * from autor;
+
+select * from livro_autor;
+
+insert into livro_autor(id_livro, id_autor)
+	values(1, 11);
+insert into livro_autor(id_livro, id_autor)
+	values(1, 12);
+insert into livro_autor(id_livro, id_autor)
+	values(11, 13);
+insert into livro_autor(id_livro, id_autor)
+	values(12, 14);
+insert into livro_autor(id_livro, id_autor)
+	values(13, 15);
+insert into livro_autor(id_livro, id_autor)
+	values(13, 16);
+insert into livro_autor(id_livro, id_autor)
+	values(14, 17);
+insert into livro_autor(id_livro, id_autor)
+	values(15, 17);
+insert into livro_autor(id_livro, id_autor)
+	values(16, 18);
+insert into livro_autor(id_livro, id_autor)
+	values(17, 19);
+
+create table aluno(
+	id serial not null,
+	nome varchar(50) not null,
+
+	constraint pk_aluno_id primary key (id),
+);
+
+insert into aluno(nome)
+	values('Mario');
+insert into aluno(nome)
+	values('João');
+insert into aluno(nome)
+	values('Paulo');
+insert into aluno(nome)
+	values('Pedro');
+insert into aluno(nome)
+	values('Maria');
+
+create table emprestimo(
+	id serial not null,
+	id_aluno integer not null,
+	id_livro integer not null,
+	data_emprestimo date not null default current_date,
+	data_devolucao date not null,
+	valor float not null,
+	devolvido boolean not null default false,
+
+	constraint pk_emprestimo_id primary key (id),
+	constraint fk_emprestimo_idaluno foreign key (id_aluno) references aluno (id),
+	constraint fk_emprestimo_idlivro foreign key (id_livro) references livro (id)
+);
+
+alter table emprestimo drop column data_devolucao;
+alter table emprestimo drop column id_livro;
+alter table emprestimo add data_devolucao date;
+
+select * from aluno;
+
+insert into emprestimo(id_aluno, valor)
+	values(1, 10);
+insert into emprestimo(id_aluno, valor)
+	values(1, 5);
+insert into emprestimo(id_aluno, valor)
+	values(2, 12);
+insert into emprestimo(id_aluno, valor)
+	values(3, 8);
+insert into emprestimo(id_aluno, valor)
+	values(4, 15);
+insert into emprestimo(id_aluno, valor)
+	values(4, 20);
+insert into emprestimo(id_aluno, valor)
+	values(4, 5);
+
+select 
+	e.id as id_empresdimo,
+	a.nome as nome_aluno
+from 
+	aluno a
+right outer join
+	emprestimo e on e.id_aluno = a.id;
+
+select * from livro;
+
+create table emprestimo_livro(
+	id_emprestimo integer not null,
+	id_livro integer not null,
+
+	constraint pk_emprestimo_livro_id primary key (id_emprestimo, id_livro),
+	constraint fk_emprestimo_livro_idemprestimo foreign key (id_emprestimo) references emprestimo (id),
+	constraint kf_emprestimo_livro_idlivro foreign key (id_livro) references livro (id)
+);
+
+insert into emprestimo_livro(id_emprestimo, id_livro)
+	values(1, 1);
+insert into emprestimo_livro(id_emprestimo, id_livro)
+	values(2, 13);
+insert into emprestimo_livro(id_emprestimo, id_livro)
+	values(3, 11);
+insert into emprestimo_livro(id_emprestimo, id_livro)
+	values(4, 14);
+insert into emprestimo_livro(id_emprestimo, id_livro)
+	values(5, 15);
+insert into emprestimo_livro(id_emprestimo, id_livro)
+	values(6, 12);
+insert into emprestimo_livro(id_emprestimo, id_livro)
+	values(7, 16);
+
+select * from emprestimo_livro;
+
+create index idx_emprestimo_dataemprestimo on emprestimo (data_emprestimo);
+create index idx_emprestimo_datadevolucao on emprestimo (data_devolucao);
