@@ -1607,3 +1607,61 @@ select * from emprestimo_livro;
 
 create index idx_emprestimo_dataemprestimo on emprestimo (data_emprestimo);
 create index idx_emprestimo_datadevolucao on emprestimo (data_devolucao);
+
+--nome dos autores em ordem alfabetica
+select nome from autor order by nome;
+
+--nome dos alunos que começam com a letra P
+select * from aluno where nome like 'P%';
+
+--selecione o nome dos livros da categoria de banco de dados
+
+select 
+	v.nome as nome_livro,
+	cat.nome as categoria
+from 
+	livro v
+left outer join 
+	categoria cat on cat.id = v.id_categoria
+where 
+	cat.nome like 'Banco de Dados' or cat.nome like 'Java';
+
+--nome dos livros da editora Bookman
+select 
+	l.nome as nome_livro,
+	e.nome as editora
+from
+	livro l
+left outer join
+	editora e on e.id = l.id_editora
+where
+	e.nome like 'Bookman';
+
+--Consultas com agrupamentos simples
+--a quantidade de livros
+select 
+	count(*) as quantidade_livros
+from
+	livro;
+
+--o somatorio dos valores dos emprestimos
+select sum(valor) from emprestimo;
+
+--a media dos valores dos emprestimos
+select avg(valor) from emprestimo;
+
+--o maior valor do campo emprestimo
+select max(valor) from emprestimo;
+
+--o menor valor do campo emprestimo
+select min(valor) from emprestimo;
+
+--o somatorio do valor dos emprestimos que estão entre os dias
+--27/10/2024 e 29/10/2024
+select 
+	sum(e.valor) as somatorio
+from
+	emprestimo e
+where
+	e.data_emprestimo between '2024-10-27' and '2027-10-29';
+
