@@ -1665,3 +1665,53 @@ from
 where
 	e.data_emprestimo between '2024-10-27' and '2027-10-29';
 
+-----------------------------------------------------------------------------------------------
+
+-- Funções
+
+select valor, concat('R$ ', round(cast(valor as numeric), 2)) from pedido;
+
+create function formata_moeda(valor float) returns varchar(20) language plpgsql as
+$$
+begin
+	return concat('R$ ', round(cast(valor as numeric), 2));
+end;
+$$;
+
+select valor, formata_moeda(valor) from pedido;
+select valor, formata_moeda(valor) from produto;
+
+--criando função enviando o id do cliente e retornando o nome
+create function get_nome_by_id(id_cliente integer) returns varchar(50) language plpgsql as
+$$
+--logo abaixo estou criando uma variavel
+declare r varchar(50);
+begin
+	select c.nome into r from cliente c where c.id = id_cliente;
+	return r;
+end
+$$;
+
+select get_nome_by_id(p.id_cliente) as cliente from pedido p;
+
+--Exercicio
+--1. Crie uma função que receba como parâmetro o ID do pedido e retorne o valor total deste pedido
+
+create function get_valortotal_pedido(idpedido integer) returns float language plpgsql as
+$$
+begin
+	return p.valor from pedido p where id = idpedido;
+end
+$$;
+
+select * from pedido p where p.valor = (select max(valor) from pedido);
+
+--2. Crie uma função chamada “maior”, que quando executada retorne o pedido com o maior valor
+create function get_maior_pedido() returns integer language plpgsql as
+$$
+begin
+	return p.id from pedido p where p.valor = (select max(valor) from pedido);
+end
+$$;
+
+select * from pedido where pedido.id = get_maior_pedido();
