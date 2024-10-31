@@ -1715,3 +1715,32 @@ end
 $$;
 
 select * from pedido where pedido.id = get_maior_pedido();
+
+--Stored Procedures
+--bem parecidos com funções
+-- mas diferente das funções, as procedures não precisam retornar valores, podendo só realizar procedimentos
+
+--para chamar uma procedure precisamos utilizar a clausula
+--CALL OU EXECUTE
+create procedure inserir_bairro(nome_bairro varchar(30)) language sql as
+$$
+	insert into bairro(nome)
+		values(nome_bairro);
+$$;
+
+--para chamar a procedure
+call inserir_bairro('teste procedure');
+
+--Exercicio
+--1. Crie uma stored procedure que receba como parâmetro o ID do produto e o percentual de aumento, 
+--e reajuste o preço somente deste produto de acordo com o valor passado como parâmetro
+
+select * from produto;
+update produto set valor = valor + (valor * (10.0/100)) where id = 1;
+
+create procedure aumentar_valor_produto_by_percentual(id_produto integer, percentual integer) language sql as
+$$
+	update produto set valor = valor + (valor * ((CAST(percentual AS FLOAT)/100))) where id = id_produto;
+$$;
+
+call aumentar_valor_produto_by_percentual(6, 10);
