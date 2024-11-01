@@ -1744,3 +1744,42 @@ $$
 $$;
 
 call aumentar_valor_produto_by_percentual(6, 10);
+
+--Trigers
+--funções que são executadas automaticamente que não precisam ser chamadas
+
+--condições ou eventos que ocorrem na base de dados
+
+create table bairro_auditoria(
+	id_bairro integer not null,
+	data_criacao timestamp not null
+);
+
+drop table bairro_autitoria;
+
+--criando da função referente a trigger
+create or replace function bairro_log() returns trigger language plpgsql as
+$$
+begin
+	--old(valor antigo do registro) -> new(novo valor que foi modificado)
+	insert into bairro_auditoria (id_bairro, data_criacao) values (new.id, current_timestamp);
+	return new;
+	
+end;
+$$;
+
+--criação da trigger
+create or replace trigger bairro_log_trigger after insert on bairro for each row execute procedure bairro_log();
+
+
+--existem varios tipos de comandos associados ao trigger
+--after insert
+--before insert
+--after delete
+--before delete
+
+call inserir_bairro ('Teste 10');
+call inserir_bairro ('Teste 20');
+call inserir_bairro ('Teste 30');
+
+select * from bairro_auditoria;
