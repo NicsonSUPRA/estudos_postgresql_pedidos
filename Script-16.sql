@@ -1783,3 +1783,26 @@ call inserir_bairro ('Teste 20');
 call inserir_bairro ('Teste 30');
 
 select * from bairro_auditoria;
+
+--Exercicio
+create table pedidos_apagados(
+	id_pedido integer not null,
+	id_cliente integer not null,
+	id_transportadora integer not null,
+	id_vendedor integer not null,
+	data_pedido date not null,
+	valor float not null,
+	data_deletado date not null default current_date
+);
+
+create or replace function pedidos_log() returns trigger language plpgsql as
+$$
+begin
+	insert into pedidos_apagados(id_pedido, id_cliente, id_transportadors, id_vendedor, data_pedido, valor)
+		values(old.id, old.id_cliente, old.id_transportadora, old.id_vendedor, old.data_pedido, old.valor);
+		return old;
+end;
+$$;
+
+create or replace trigger pedido_log_trigger before delete on pedido for each row execute procedure pedidos_log();
+
