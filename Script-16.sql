@@ -1806,3 +1806,31 @@ $$;
 
 create or replace trigger pedido_log_trigger before delete on pedido for each row execute procedure pedidos_log();
 
+--Dominios
+--> tipo de dado definido pelo usuário, para que os campos da tabela fiquem todos padronizados
+
+--criando dominio para referenciar os ids das tabelas
+create domain idcurto as smallint;
+create domain idmedio as integer;
+create domain idlong as bigint;
+
+--criando domains destinados a caracteres
+create domain sigla as varchar(10);
+create domain codigo as varchar(10);
+create domain nome_curto as varchar(15);
+create domain nome_medio as varchar(50);
+create domain nome_longo as varchar(70);
+
+--para data e hora
+create domain data as date;
+create domain hora as time;
+create domain data_hora as timestamp;
+
+--Numericos
+create domain moeda as numeric(10,2);
+create domain float_curto as numeric(6,2);
+create domain float_medio as numeric(10,2);
+create domain float_longo as numeric(15,2);
+
+--modificando as tabelas para que recebam os tipos como os dominios
+alter table bairro alter column nome type nome_medio;
