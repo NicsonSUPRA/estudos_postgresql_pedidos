@@ -1834,3 +1834,22 @@ create domain float_longo as numeric(15,2);
 
 --modificando as tabelas para que recebam os tipos como os dominios
 alter table bairro alter column nome type nome_medio;
+
+--Permissões de usuários
+create role gerente;
+create role estagiario;
+
+--após uma role ser criada, precisamos das as devidas permissões no que cada um pode acessar
+
+--no caso abaixo, o gerente pode selecionar e excluir dados de todas as tabelas, mas não pode excluir
+grant select, insert on bairro, cliente, complemento, fornecedor, municipio, nacionalidade, pedido, 
+	pedido_produto, produto, profissao, transportadora, uf, vendedor to gerente with grant option;
+grant all on all sequences in schema public to gerente;
+--revoke: retira uma determinada permissão
+--nesse caso, o estagiario apenas pode selecionar os dados das devidas tabelas, para gerer relatorios por exemplo
+grant select on bairro, cliente, complemento, fornecedor, municipio, nacionalidade, pedido, 
+	pedido_produto, produto, profissao, transportadora, uf, vendedor to estagiario with grant option;
+
+--inserindo o usuario nas suas respectivas roles
+create role maria login password '123' in role gerente;
+create role pedro login password '321' in role estagiario;
